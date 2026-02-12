@@ -37,10 +37,26 @@ curl -X POST http://localhost:8080/agentic/master \
 - `POST /agentic/cancel`
 - `POST /agentic/payment`
 
+## LM Studio integration (optional)
+
+This project can call LM Studio using its OpenAI-compatible API.
+
+1. Start LM Studio and enable the **Local Server** (OpenAI-compatible).
+2. Note the base URL (default: `http://localhost:1234/v1`) and the model name.
+3. Run the app with LLM support enabled:
+
+```bash
+AGENTIC_LLM_ENABLED=true \
+AGENTIC_LLM_BASE_URL=http://localhost:1234/v1 \
+AGENTIC_LLM_MODEL=your-model-name \
+mvn spring-boot:run
+```
+
+The CancelAgent will ask the LLM to generate a one-sentence summary. If the LLM
+is unreachable, the app falls back to the deterministic summary.
+
 ## Notes
 
 - Pending payment check is deterministic for demo purposes:
   - Any `memberId` or `billingAccountId` ending with `9` is treated as pending.
-- You do NOT need LM Studio or any LLM runtime for this demo. The agents are
-  deterministic and do not call an LLM. If you want a real LLM, you can later
-  plug in OpenAI, Azure OpenAI, Ollama, or LM Studio.
+- By default, LLM calls are disabled (`agentic.llm.enabled=false`).

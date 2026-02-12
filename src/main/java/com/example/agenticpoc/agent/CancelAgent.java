@@ -1,5 +1,6 @@
 package com.example.agenticpoc.agent;
 
+import com.example.agenticpoc.llm.LlmSummaryService;
 import com.example.agenticpoc.model.AgentInteraction;
 import com.example.agenticpoc.model.AgentRequest;
 import com.example.agenticpoc.model.AgentResponse;
@@ -16,10 +17,12 @@ import java.util.Map;
 public class CancelAgent implements AgentHandler
 {
     private final PaymentAgent paymentAgent;
+    private final LlmSummaryService llmSummaryService;
 
-    public CancelAgent( PaymentAgent paymentAgent )
+    public CancelAgent( PaymentAgent paymentAgent, LlmSummaryService llmSummaryService )
     {
         this.paymentAgent = paymentAgent;
+        this.llmSummaryService = llmSummaryService;
     }
 
     @Override
@@ -64,6 +67,12 @@ public class CancelAgent implements AgentHandler
         {
             summary = summary + " for prompt: " + request.prompt();
         }
+
+        summary = llmSummaryService.buildCancelSummary(
+            request,
+            data,
+            paymentSummary.hasPendingPayments(),
+            summary );
 
         return new AgentResponse( "CancelAgent", summary, data, interactions );
     }

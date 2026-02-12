@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+agentic:
+  llm:
+    enabled: false
+    base-url: http://localhost:1234/v1
+    model: local-model
+    api-key: lm-studio
+    temperature: 0.2
+    max-tokens: 200
+    timeout-ms: 5000
